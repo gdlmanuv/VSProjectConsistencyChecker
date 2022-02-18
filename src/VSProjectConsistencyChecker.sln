@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSProjectConsistencyChecker", "VSProjectConsistencyChecker\VSProjectConsistencyChecker.csproj", "{68341D76-65F8-4E52-A0D8-F0CB428AE168}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSProjectConsistencyChecker.Common", "VSProjectConsistencyChecker.Common\VSProjectConsistencyChecker.Common.csproj", "{DC8A2BFB-DFFC-4556-AAC6-99862E679027}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68341D76-65F8-4E52-A0D8-F0CB428AE168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68341D76-65F8-4E52-A0D8-F0CB428AE168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68341D76-65F8-4E52-A0D8-F0CB428AE168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68341D76-65F8-4E52-A0D8-F0CB428AE168}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC8A2BFB-DFFC-4556-AAC6-99862E679027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC8A2BFB-DFFC-4556-AAC6-99862E679027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC8A2BFB-DFFC-4556-AAC6-99862E679027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC8A2BFB-DFFC-4556-AAC6-99862E679027}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ADCF55EA-F008-4B97-8B91-5208CC12AF1C}
+	EndGlobalSection
+EndGlobal
