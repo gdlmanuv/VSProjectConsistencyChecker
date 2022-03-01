@@ -15,7 +15,7 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine("Project,Configuration,Platform,Target,Output, Platforms Match, Expected output, Outputs Match");
+            builder.AppendLine("Project,Framework,Configuration,Platform,Target,Output, Platforms Match, Expected output, Outputs Match");
 
             if (extensions == null)
             {
@@ -58,6 +58,7 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
             string platform;
             string expectedOutput;
             string configuration;
+            string frameworkVersion;
 
             foreach (var f in Directory.GetFiles(location, extension, SearchOption.AllDirectories))
             {
@@ -69,6 +70,8 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
 
                     var propertyGroupElements = xDocument.Root.Elements().Where(e => e.Name.LocalName == "PropertyGroup").ToList();
 
+                    frameworkVersion = "";
+
                     foreach (var propertyGroupElement in propertyGroupElements)
                     {
                         fileName = "";
@@ -79,12 +82,17 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
                         expectedOutput = "";
                         configuration = "";
 
+                        if (string.IsNullOrEmpty(frameworkVersion) && propertyGroupElement.Elements().Any(e => e.Name.LocalName.Equals("TargetFrameworkVersion")))
+                        {
+                            frameworkVersion = propertyGroupElement.Elements().First(e => e.Name.LocalName.Equals("TargetFrameworkVersion")).Value;
+                        }
+
                         if (propertyGroupElement.HasAttributes && propertyGroupElement.Attributes().Any(a => a.Name.LocalName.Equals("Condition")))
                         {
                             fileName = fileInfo.Name;                            
                             configurationAndPlatform = propertyGroupElement.Attributes().First(
                                     a => a.Name.LocalName.Equals("Condition")).Value.Replace("'$(Configuration)|$(Platform)' == ", "").Replace("'", "").Trim();
-                            builder.Append(fileName).Append("|").Append(configurationAndPlatform);
+                            builder.Append(fileName).Append("|").Append(frameworkVersion).Append("|").Append(configurationAndPlatform);
 
                             if (propertyGroupElement.Elements().Any(e => e.Name.LocalName == "PlatformTarget"))
                             {
