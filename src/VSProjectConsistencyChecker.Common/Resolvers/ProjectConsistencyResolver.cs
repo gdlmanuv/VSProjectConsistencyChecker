@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace VSProjectConsistencyChecker.Common.Resolvers
@@ -64,9 +65,11 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
             {
                 var fileInfo = new FileInfo(f);
 
+                XDocument xDocument = null;
+
                 using (var reader = new StreamReader(fileInfo.FullName))
                 {
-                    XDocument xDocument = XDocument.Load(reader);
+                    xDocument = XDocument.Load(reader);
 
                     var propertyGroupElements = xDocument.Root.Elements().Where(e => e.Name.LocalName == "PropertyGroup").ToList();
 
@@ -89,7 +92,7 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
 
                         if (propertyGroupElement.HasAttributes && propertyGroupElement.Attributes().Any(a => a.Name.LocalName.Equals("Condition")))
                         {
-                            fileName = fileInfo.Name;                            
+                            fileName = fileInfo.Name;
                             configurationAndPlatform = propertyGroupElement.Attributes().First(
                                     a => a.Name.LocalName.Equals("Condition")).Value.Replace("'$(Configuration)|$(Platform)' == ", "").Replace("'", "").Trim();
                             builder.Append(fileName).Append("|").Append(frameworkVersion).Append("|").Append(configurationAndPlatform);
@@ -104,16 +107,19 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
                                 builder.Append("|");
                             }
 
+                            configuration = configurationAndPlatform.Split('|').First();
+                            platform = configurationAndPlatform.Split('|').Last();
+
                             if (propertyGroupElement.Elements().Any(e => e.Name.LocalName == "OutputPath"))
                             {
                                 outputPath = propertyGroupElement.Elements().First(e => e.Name.LocalName == "OutputPath").Value;
                                 builder.Append("|").Append(outputPath);
+
+                                //MVALLE Enable to save massive changes
+                                //propertyGroupElement.Elements().First(e => e.Name.LocalName == "OutputPath").Value = $@"bin\{(platform.Equals("AnyCPU") ? "" : $@"{platform}\")}{configuration}\";
                             }
 
                             // Verify whether platform matches with platform targetx
-                            configuration = configurationAndPlatform.Split('|').First();
-                            platform = configurationAndPlatform.Split('|').Last();
-
                             if ((string.IsNullOrWhiteSpace(platformTarget) && platform.Equals("AnyCPU")) || platformTarget.Equals(platform))
                             {
                                 builder.Append("|").Append("CORRECT");
@@ -141,6 +147,9 @@ namespace VSProjectConsistencyChecker.Common.Resolvers
                         }
                     }
                 }
+            
+                //MVALLE Enable to save massive changes
+                //xDocument.Save(fileInfo.FullName);
 
                 totalFiles++;
             }
